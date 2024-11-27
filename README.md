@@ -1,13 +1,13 @@
 
-# Project Title:
 # monitoring_cpu_usage
 
 ## Description
-A simple project using InfluxDB to demonstrate its core functionalities
-- such as writing data
+A project to demonstrate core functionalities of InfluxDB:
+- writing data
 - querying
 - managing time series data.
-This example focuses on monitoring CPU usage over time, a typical use case for InfluxDB.
+
+This project focuses on monitoring CPU usage over time, a typical use case for InfluxDB.
 
 ## Project Overview
 The project will:
@@ -16,14 +16,18 @@ The project will:
 - demonstrate retention policy and organization basics
 
 ## Requirements
-InfluxDB installed or running via Docker.
-Python installed, with the influxdb-client library.
+InfluxDB installed or running via Docker
+Python installed, with the influxdb-client library
 
 ## Installation notes
 Step 1: Start InfluxDB using Docker:
+
 `docker run -d -p 8086:8086 --name=influxdb -e INFLUXDB_ADMIN_USER=admin -e INFLUXDB_ADMIN_PASSWORD=password influxdb:latest`
+
 Step 2: Install Required Library
+
 `pip install influxdb-client`
+
 Step 3: Set Up InfluxDB Token and Organization
 Open the InfluxDB UI at http://localhost:8086.
 Log in using the credentials you set (admin/password).
@@ -33,7 +37,9 @@ Generate an API Token and replace INFLUXDB_TOKEN in the script with it.
 ## Usage - How to Run the Project
 Start the InfluxDB instance (e.g., via Docker).
 Run the Python script:
+
 `python influxdb_example.py`
+
 Observe data writing and querying in the terminal.
 This example introduces time-series concepts, InfluxDB's strengths, and real-world usage in monitoring scenarios.
 
