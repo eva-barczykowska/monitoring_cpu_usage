@@ -14,8 +14,8 @@ INFLUXDB_BUCKET = "cpu_usage"
 def setup_influxdb():
     """Sets up InfluxDB bucket and verifies connection."""
     with InfluxDBClient(url=INFLUXDB_URL, token=INFLUXDB_TOKEN, org=INFLUXDB_ORG) as client:
-        health = client.health()
-        if health.status != "pass":
+        health = client.ping()
+        if health:
             raise Exception("InfluxDB is not healthy. Check your setup!")
         print("InfluxDB connected successfully.")
 
