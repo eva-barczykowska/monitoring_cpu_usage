@@ -6,6 +6,9 @@ import time
 
 # Configuration
 INFLUXDB_URL = "http://localhost:8086"
+# I am aware that I am pushing this token into github but it's only a sample project
+# I decided not to remove it, but normally I would use this information:
+# https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/removing-sensitive-data-from-a-repository
 INFLUXDB_TOKEN = "13BvEwt0glL-7PXcH_3i40BGacC8hRp4MqPjieqrW3uIhuYlCNhfw_TrfshtEXsJEozBZi6keoRhPuc1OzArFg=="
 INFLUXDB_ORG = "Sample Project"
 INFLUXDB_BUCKET = "cpu_usage"
