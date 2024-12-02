@@ -6,6 +6,7 @@ import time
 
 # Configuration
 INFLUXDB_URL = "http://localhost:8086"
+INFLUXDB_TOKEN = "13BvEwt0glL-7PXcH_3i40BGacC8hRp4MqPjieqrW3uIhuYlCNhfw_TrfshtEXsJEozBZi6keoRhPuc1OzArFg=="
 INFLUXDB_ORG = "Sample Project"
 INFLUXDB_BUCKET = "cpu_usage"
 
