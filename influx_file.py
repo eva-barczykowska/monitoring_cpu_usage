@@ -6,10 +6,6 @@ import time
 
 # Configuration
 INFLUXDB_URL = "http://localhost:8086"
-# I am aware that I am pushing this token into github but it's only a sample project
-# I decided not to remove it, but normally I would use this information:
-# https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/removing-sensitive-data-from-a-repository
-INFLUXDB_TOKEN = "REMOVED_SECRET=="
 INFLUXDB_ORG = "Sample Project"
 INFLUXDB_BUCKET = "cpu_usage"
 
@@ -30,7 +26,7 @@ def setup_influxdb():
     """
     with InfluxDBClient(url=INFLUXDB_URL, token=INFLUXDB_TOKEN, org=INFLUXDB_ORG) as client:
         health = client.ping()
-        if not health:
+        if not health:  # Corrected condition
             raise Exception("InfluxDB is not healthy. Check your setup!")
         print("InfluxDB connected successfully.")
 
