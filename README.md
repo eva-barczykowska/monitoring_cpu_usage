@@ -38,7 +38,7 @@ Generate an API Token and replace INFLUXDB_TOKEN in the script with it.
 Start the InfluxDB instance (e.g., via Docker).
 Run the Python script:
 
-`python influxdb_example.py`
+`python influxdb_file.py`
 
 Observe data writing and querying in the terminal.
 This example introduces time-series concepts, InfluxDB's strengths, and real-world usage in monitoring scenarios.

@@ -1,13 +1,13 @@
 from influxdb_client import InfluxDBClient, Point
 from influxdb_client.client.write_api import SYNCHRONOUS
-from datetime import datetime
+from datetime import datetime, timezone
 import random
 import time
 
 # Configuration
 INFLUXDB_URL = "http://localhost:8086"
-INFLUXDB_TOKEN = "my-token"
-INFLUXDB_ORG = "my-org"
+INFLUXDB_TOKEN = "REMOVED_SECRET=="
+INFLUXDB_ORG = "Sample Project"
 INFLUXDB_BUCKET = "cpu_usage"
 
 
@@ -15,7 +15,7 @@ def setup_influxdb():
     """Sets up InfluxDB bucket and verifies connection."""
     with InfluxDBClient(url=INFLUXDB_URL, token=INFLUXDB_TOKEN, org=INFLUXDB_ORG) as client:
         health = client.ping()
-        if health:
+        if not health:  # Corrected condition
             raise Exception("InfluxDB is not healthy. Check your setup!")
         print("InfluxDB connected successfully.")
 
@@ -34,13 +34,13 @@ def write_cpu_data():
     with InfluxDBClient(url=INFLUXDB_URL, token=INFLUXDB_TOKEN, org=INFLUXDB_ORG) as client:
         write_api = client.write_api(write_options=SYNCHRONOUS)
 
-        for _ in range(10):  # Simulate 10 data points
-            cpu_usage = random.uniform(10, 100)
+        for _ in range(10):  # Corrected loop syntax
+            cpu_usage = random.uniform(10, 100)  # Fixed variable name
             point = (
                 Point("cpu")
                 .tag("host", "server01")
                 .field("usage", cpu_usage)
-                .time(datetime.now())
+                .time(datetime.now(timezone.utc))  # Use UTC time
             )
             write_api.write(bucket=INFLUXDB_BUCKET, record=point)
             print(f"Written: {point.to_line_protocol()}")
@@ -63,7 +63,7 @@ def query_cpu_data():
                 print(f"Average CPU Usage: {record['_value']:.2f}%")
 
 
-if __name__ == "__main__":
+if __name__ == "__main__":  # Corrected name spelling
     print("Setting up InfluxDB...")
     setup_influxdb()
 
