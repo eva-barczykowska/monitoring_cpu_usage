@@ -15,14 +15,25 @@ INFLUXDB_BUCKET = "cpu_usage"
 
 
 def setup_influxdb():
-    """Sets up InfluxDB bucket and verifies connection."""
+    """
+    Sets up InfluxDB bucket and verifies connection.
+
+    This function initializes a connection to the InfluxDB server using the provided URL, token, and organization.
+    It then checks the health of the connection and raises an exception if the InfluxDB is not healthy.
+    Then it creates a bucket in the specified organization if the bucket hasn't been created yet.
+
+    Parameters:
+    None
+
+    Returns:
+    None
+    """
     with InfluxDBClient(url=INFLUXDB_URL, token=INFLUXDB_TOKEN, org=INFLUXDB_ORG) as client:
         health = client.ping()
-        if not health:  # Corrected condition
+        if not health:
             raise Exception("InfluxDB is not healthy. Check your setup!")
         print("InfluxDB connected successfully.")
 
-        # Create a bucket if it doesn't exist
         buckets_api = client.buckets_api()
         buckets = buckets_api.find_bucket_by_name(INFLUXDB_BUCKET)
         if not buckets:
@@ -33,12 +44,23 @@ def setup_influxdb():
 
 
 def write_cpu_data():
-    """Writes random CPU usage data to InfluxDB."""
+    """
+    Writes random CPU usage data to InfluxDB.
+
+    This function connects to the InfluxDB server using the provided URL, token, and organization.
+    It then initializes a synchronous write API to write CPU usage data to a specified bucket.
+    The function generates random CPU usage values between 10 and 100, creates a Point object with the
+    CPU usage data, and writes the Point to the InfluxDB bucket. The function also prints the written
+    data in Line Protocol format and simulates data arrival over time using a sleep function.
+
+    Parameters:
+    None
+    """
     with InfluxDBClient(url=INFLUXDB_URL, token=INFLUXDB_TOKEN, org=INFLUXDB_ORG) as client:
         write_api = client.write_api(write_options=SYNCHRONOUS)
 
         for _ in range(10):  # Corrected loop syntax
-            cpu_usage = random.uniform(10, 100)  # Fixed variable name
+            cpu_usage = random.uniform(10, 100)
             point = (
                 Point("cpu")
                 .tag("host", "server01")
@@ -51,7 +73,20 @@ def write_cpu_data():
 
 
 def query_cpu_data():
-    """Queries CPU usage data from InfluxDB."""
+    """
+    Queries CPU usage data from InfluxDB.
+
+    This function connects to the InfluxDB server using the provided URL, token, and organization.
+    It then constructs a query to calculate the average CPU usage over the last hour.
+    The query retrieves data from the specified bucket, filters for CPU usage measurements,
+    and calculates the mean value. The function prints the average CPU usage for each record.
+
+    Parameters:
+    None
+
+    Returns:
+    None
+    """
     with InfluxDBClient(url=INFLUXDB_URL, token=INFLUXDB_TOKEN, org=INFLUXDB_ORG) as client:
         query = f'''
         from(bucket: "{INFLUXDB_BUCKET}")
@@ -66,7 +101,7 @@ def query_cpu_data():
                 print(f"Average CPU Usage: {record['_value']:.2f}%")
 
 
-if __name__ == "__main__":  # Corrected name spelling
+if __name__ == "__main__":
     print("Setting up InfluxDB...")
     setup_influxdb()
 
