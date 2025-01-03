@@ -5,23 +5,18 @@ import random
 import time
 
 # Configuration
+import os
+from dotenv import load_dotenv
+load_dotenv()
+INFLUXDB_TOKEN = os.getenv("INFLUXDB_TOKEN")
+
+INFLUXDB_TOKEN = os.getenv("INFLUXDB_TOKEN")
 INFLUXDB_URL = "http://localhost:8086"
-<<<<<<< Updated upstream
-INFLUXDB_TOKEN = "13BvEwt0glL-7PXcH_3i40BGacC8hRp4MqPjieqrW3uIhuYlCNhfw_TrfshtEXsJEozBZi6keoRhPuc1OzArFg=="
-=======
-# I am aware that I am pushing this token into github but it's only a sample project
-# I decided not to remove it, but normally I would use this information:
-# https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/removing-sensitive-data-from-a-repository
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
 INFLUXDB_ORG = "Sample Project"
 INFLUXDB_BUCKET = "cpu_usage"
 
-import os
-INFLUXDB_TOKEN = os.getenv("INFLUXDB_TOKEN")
-
+if not INFLUXDB_TOKEN:
+    raise ValueError("INFLUXDB_TOKEN is not set. Please set it as an environment variable.")
 
 
 def setup_influxdb():
@@ -38,19 +33,38 @@ def setup_influxdb():
     Returns:
     None
     """
+    # with InfluxDBClient(url=INFLUXDB_URL, token=INFLUXDB_TOKEN, org=INFLUXDB_ORG) as client:
+    #     health = client.ping()
+    #     if not health:  # Corrected condition
+    #         raise Exception("InfluxDB is not healthy. Check your setup!")
+    #     print("InfluxDB connected successfully.")
+    #
+    #     buckets_api = client.buckets_api()
+    #     buckets = buckets_api.find_bucket_by_name(INFLUXDB_BUCKET)
+    #     if not buckets:
+    #         buckets_api.create_bucket(bucket_name=INFLUXDB_BUCKET, org=INFLUXDB_ORG)
+    #         print(f"Bucket '{INFLUXDB_BUCKET}' created.")
+    #     else:
+    #         print(f"Bucket '{INFLUXDB_BUCKET}' already exists.")
     with InfluxDBClient(url=INFLUXDB_URL, token=INFLUXDB_TOKEN, org=INFLUXDB_ORG) as client:
-        health = client.ping()
-        if not health:  # Corrected condition
-            raise Exception("InfluxDB is not healthy. Check your setup!")
-        print("InfluxDB connected successfully.")
+        try:
+            # Test health
+            health = client.ping()
+            if not health:
+                raise Exception("InfluxDB is not healthy. Status:", health)
 
-        buckets_api = client.buckets_api()
-        buckets = buckets_api.find_bucket_by_name(INFLUXDB_BUCKET)
-        if not buckets:
-            buckets_api.create_bucket(bucket_name=INFLUXDB_BUCKET, org=INFLUXDB_ORG)
-            print(f"Bucket '{INFLUXDB_BUCKET}' created.")
-        else:
-            print(f"Bucket '{INFLUXDB_BUCKET}' already exists.")
+            # Check bucket
+            buckets_api = client.buckets_api()
+            bucket = buckets_api.find_bucket_by_name(INFLUXDB_BUCKET)
+            if not bucket:
+                buckets_api.create_bucket(bucket_name=INFLUXDB_BUCKET, org=INFLUXDB_ORG)
+                print(f"Bucket '{INFLUXDB_BUCKET}' created.")
+            else:
+                print(f"Bucket '{INFLUXDB_BUCKET}' already exists.")
+        except Exception as e:
+            print("Error during InfluxDB setup:", e)
+            raise
+
 
 
 def write_cpu_data():
@@ -80,6 +94,7 @@ def write_cpu_data():
             write_api.write(bucket=INFLUXDB_BUCKET, record=point)
             print(f"Written: {point.to_line_protocol()}")
             time.sleep(1)  # Simulate data arrival over time
+
 
 
 def query_cpu_data():
